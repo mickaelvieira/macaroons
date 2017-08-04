@@ -45,7 +45,7 @@ function compatibility()
                 "but it does not seem to installed on your system. \n\n" .
                 "See. https://github.com/jedisct1/libsodium-php for more information \n" .
                 "\033[0m\n";
-            exit;
+            exit(1);
         }
 
         if (has_sodium_v1_installed()) {
