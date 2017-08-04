@@ -20,5 +20,3 @@ $macaroon = $macaroon
 echo json_encode([
     'macaroon' => $macaroon->serialize(),
 ], JSON_PRETTY_PRINT);
-
-//MDAyMmxvY2F0aW9uIHNlY3JldCByYW5kb20gbnVtYmVyCjAwMjhpZGVudGlmaWVyIAW2pXouVimGAQwpISuZid9tCZgxts9IMwowMDE3Y2lkIGlwID0gMTI3LjAuMC4xCjAwMTJjaWQgdXNlcl9hdXRoCjAwNTF2aWQgD9Bm9q3Rgy4rJiDAYlJcSK8AFWjHJbrrKXM71tDAYqQhbzvxSF5-sZiz5p65qXQXqgU7dg7Wuy1yYtRiUEaOaFCV4fze3YX5CjAwMWZjbCBodHRwczovL2F1dGgudW5pY29ybi5jbwowMDJmc2lnbmF0dXJlIN53BDsF-4x57kF6qLciBHz9Ybtp-Ju0l0X3OzjmT7R2Cg
