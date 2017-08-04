@@ -1,0 +1,8 @@
+bin/            export-ignore
+spec/           export-ignore
+examples/       export-ignore
+.travis.yml     export-ignore
+phpspec.yml     export-ignore
+
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto

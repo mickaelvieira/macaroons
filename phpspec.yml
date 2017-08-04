@@ -1,0 +1,9 @@
+extensions:
+  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension: ~
+
+code_coverage:
+  format: clover
+  output: build/logs/clover.xml
+  blacklist_files:
+    - src/compatibility.php
+  show_uncovered_files: false
