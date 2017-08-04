@@ -5,10 +5,12 @@ language: php
 php: [7.0, 7.1]
 
 before_install:
-   - sudo apt-get -qq update
-   - sudo apt-get install -y libsodium-dev
+  - sudo add-apt-repository ppa:ondrej/php -y
+  - sudo apt-get update -q
+  - sudo apt-get install libsodium-dev -y
 
 install:
+  - travis_retry pecl install libsodium
   - travis_retry composer self-update
   - travis_retry composer install
 
