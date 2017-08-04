@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/mickaelvieira/macaroons.svg?branch=master)](https://travis-ci.org/mickaelvieira/macaroons)
 [![Coverage Status](https://coveralls.io/repos/github/mickaelvieira/macaroons/badge.svg?branch=master)](https://coveralls.io/github/mickaelvieira/macaroons?branch=master)
 
-A php implementation of Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud
+A php implementation of Macaroons: Cookies with Contextual Caveats for Decentralized Authorization
 
 **Specification**
 - [https://research.google.com/pubs/pub41892.html](https://research.google.com/pubs/pub41892.html)
@@ -22,9 +22,13 @@ A php implementation of Macaroons: Cookies with Contextual Caveats for Decentral
 - php >= 7.0
 - [libsodium-php >= 1.0](https://github.com/jedisct1/libsodium-php)
 
-**Note**:
+**About libsodium**
 - The `libsodium` library will be distributed with PHP >= 7.2)
 - The `libsodium` library is not required in `composer.json` because the versions 1 (`ext-libsodium`) and 2 (`ext-sodium`) have different names. Nevertheless, this package should work with both once installed.
+
+**Installation**
+
+Add the library as a requirement in your `composer.json`
 
 ```json
 {
@@ -33,7 +37,7 @@ A php implementation of Macaroons: Cookies with Contextual Caveats for Decentral
     }
 }
 ```
-or
+or with command line
 
 ```sh
 $ composer require mvieira/macaroons
@@ -41,7 +45,7 @@ $ composer require mvieira/macaroons
 
 ## Documentation
 
-Here is a simple example with third party `macaroons`:
+Here is a simple example with a third party `macaroon`:
 
 On the `target service` server, produce the `macaroon` authorizing the user to access the service.
 
