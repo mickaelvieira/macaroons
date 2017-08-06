@@ -52,9 +52,9 @@ On the `target service` server, produce the `macaroon` authorizing the user to a
 ```php
 use Macaroons\Macaroon;
 
-use function Macaroons\Crypto\crypto_gen_nonce;
+use function Macaroons\Crypto\gen_nonce;
 
-$macaroon = Macaroon::create('secret random number', crypto_gen_nonce(), 'https://unicorn.co');
+$macaroon = Macaroon::create('secret random number', Crypto\gen_nonce(), 'https://unicorn.co');
 $macaroon = $macaroon
     ->withThirdPartyCaveat('third party secret', 'user_auth', 'https://auth.unicorn.co');
 
