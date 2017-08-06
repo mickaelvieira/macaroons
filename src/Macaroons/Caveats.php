@@ -13,9 +13,6 @@ declare(strict_types = 1);
 
 namespace Macaroons;
 
-use Macaroons\Caveat\FirstParty;
-use Macaroons\Caveat\ThirdParty;
-
 /**
  * Class Caveats
  * @package CollectionJson
@@ -101,7 +98,7 @@ final class Caveats implements \Countable, \IteratorAggregate
     public function findFirstParty(): array
     {
         return array_values(array_filter($this->caveats, function (Caveat $caveat) {
-            return $caveat instanceof FirstParty;
+            return $caveat instanceof Caveat\FirstParty;
         }));
     }
 
@@ -111,7 +108,7 @@ final class Caveats implements \Countable, \IteratorAggregate
     public function findThirdParty(): array
     {
         return array_values(array_filter($this->caveats, function (Caveat $caveat) {
-            return $caveat instanceof ThirdParty;
+            return $caveat instanceof Caveat\ThirdParty;
         }));
     }
 

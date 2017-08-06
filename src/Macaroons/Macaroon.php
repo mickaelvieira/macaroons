@@ -13,15 +13,10 @@ declare(strict_types = 1);
 
 namespace Macaroons;
 
+use Macaroons\Crypto;
 use Macaroons\Exceptions;
 use Macaroons\Serialization\V1;
 use Macaroons\Serialization\Serializer;
-
-use function Macaroons\Crypto\crypto_hmac;
-use function Macaroons\Crypto\crypto_erase;
-use function Macaroons\Crypto\base64_url_encode;
-use function Macaroons\Crypto\crypto_bound_hmac;
-use function Macaroons\Crypto\crypto_gen_derived_key;
 
 /**
  * Class Macaroon
@@ -33,10 +28,10 @@ final class Macaroon implements \IteratorAggregate
     private $location;
 
     /** @var string */
-    private $signature;
+    private $identifier;
 
     /** @var string */
-    private $identifier;
+    private $signature;
 
     /** @var Caveats */
     private $caveats;
@@ -66,11 +61,11 @@ final class Macaroon implements \IteratorAggregate
      */
     public static function create(string $location, string $identifier, string $secret): Macaroon
     {
-        $rootKey   = crypto_gen_derived_key($secret);
-        $signature = crypto_hmac($rootKey, $identifier);
+        $rootKey   = Crypto\gen_derived_key($secret);
+        $signature = Crypto\hmac($rootKey, $identifier);
 
-        crypto_erase($secret);
-        crypto_erase($rootKey);
+        Crypto\erase($secret);
+        Crypto\erase($rootKey);
 
         return new static($location, $identifier, $signature);
     }
@@ -153,7 +148,7 @@ final class Macaroon implements \IteratorAggregate
 
         $caveat = Caveat\ThirdParty::create($id, $secret, $this->signature, $location);
 
-        crypto_erase($secret);
+        Crypto\erase($secret);
 
         $copy->signature = $caveat->sign($this->signature);
         $copy->caveats   = $this->caveats->with($caveat);
@@ -179,9 +174,9 @@ final class Macaroon implements \IteratorAggregate
     public function bind(Macaroon $discharge): Macaroon
     {
         $rootKey   = str_pad('', 32, "\0", STR_PAD_RIGHT);
-        $signature = crypto_bound_hmac($rootKey, $this->signature, $discharge->getSignature());
+        $signature = Crypto\bound_hmac($rootKey, $this->signature, $discharge->getSignature());
 
-        crypto_erase($rootKey);
+        Crypto\erase($rootKey);
 
         return $discharge->withSignature($signature);
     }
@@ -198,11 +193,11 @@ final class Macaroon implements \IteratorAggregate
     public function verify(string $secret, Verifier $verifier): bool
     {
         // Initialize the verifier with the macaroon root signature
-        $rootKey  = crypto_gen_derived_key($secret);
-        $verifier = $verifier->withSignature(crypto_hmac($rootKey, $this->identifier));
+        $rootKey  = Crypto\gen_derived_key($secret);
+        $verifier = $verifier->withSignature(Crypto\hmac($rootKey, $this->identifier));
 
         // Verify macaroon's caveats
-        // It will also recursively verify the discharge macaroons that match a third party caveat
+        // It will also recursively verify discharge macaroons that match a third party caveat
         foreach ($this->caveats as $k => $caveat) {
             /** @var Caveat $caveat */
             $verifier = $caveat->verify($verifier, $this);
@@ -230,7 +225,7 @@ final class Macaroon implements \IteratorAggregate
     public function verifyAsDischarge(string $rootKey, Verifier $verifier, Macaroon $rootMacaroon): bool
     {
         // Initialize the verifier with the macaroon root signature
-        $signature = crypto_hmac($rootKey, $this->identifier);
+        $signature = Crypto\hmac($rootKey, $this->identifier);
         $verifier  = $verifier->withSignature($signature);
 
         // Verify macaroon's caveats
@@ -241,7 +236,7 @@ final class Macaroon implements \IteratorAggregate
 
         // Calculate the bound signature based on what the verifier has gathered
         $rootKey = str_pad('', 32, "\0", STR_PAD_RIGHT);
-        $bound   = crypto_bound_hmac($rootKey, $rootMacaroon->getSignature(), $verifier->getSignature());
+        $bound   = Crypto\bound_hmac($rootKey, $rootMacaroon->getSignature(), $verifier->getSignature());
 
         // Check whether the resulting bound signature is equal to the discharge macaroon signature
         if (!hash_equals($bound, $this->signature)) {
@@ -290,7 +285,7 @@ final class Macaroon implements \IteratorAggregate
             $this->location,
             $this->identifier,
             $this->caveats,
-            base64_url_encode($this->signature)
+            Crypto\base64_url_encode($this->signature)
         );
     }
 

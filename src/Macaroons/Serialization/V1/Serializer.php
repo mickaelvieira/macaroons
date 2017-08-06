@@ -14,12 +14,10 @@ declare(strict_types = 1);
 namespace Macaroons\Serialization\V1;
 
 use Macaroons\Caveat;
+use Macaroons\Crypto;
 use Macaroons\Packet;
 use Macaroons\Macaroon;
 use Macaroons\Serialization\Serializer as SerializerContract;
-
-use function Macaroons\Crypto\base64_url_encode;
-use function Macaroons\Crypto\base64_url_decode;
 
 /**
  * Class Serializer
@@ -57,7 +55,7 @@ final class Serializer implements SerializerContract
             return (string)$packet;
         };
 
-        return base64_url_encode(implode('', array_map($toString, $packets)));
+        return Crypto\base64_url_encode(implode('', array_map($toString, $packets)));
     }
 
     /**
@@ -68,7 +66,7 @@ final class Serializer implements SerializerContract
         $index      = 0;
         $stack      = [];
         $caveats    = [];
-        $decoded    = base64_url_decode($data);
+        $decoded    = Crypto\base64_url_decode($data);
         $location   = null;
         $identifier = null;
         $signature  = null;

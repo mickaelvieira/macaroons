@@ -14,17 +14,10 @@ declare(strict_types = 1);
 namespace Macaroons\Caveat;
 
 use Macaroons\Caveat;
-use Macaroons\Macaroon;
+use Macaroons\Crypto;
 use Macaroons\Verifier;
+use Macaroons\Macaroon;
 use Macaroons\Exceptions;
-
-use function Macaroons\Crypto\crypto_encrypt;
-use function Macaroons\Crypto\crypto_decrypt;
-use function Macaroons\Crypto\base64_url_encode;
-use function Macaroons\Crypto\crypto_bound_hmac;
-use function Macaroons\Crypto\crypto_gen_derived_key;
-use function Macaroons\Crypto\crypto_get_nonce_length;
-use function Macaroons\Crypto\crypto_ensure_key_length;
 
 /**
  * Class ThirdParty
@@ -75,7 +68,7 @@ final class ThirdParty extends Caveat
      */
     public function sign(string $secret): string
     {
-        return crypto_bound_hmac($secret, $this->verificationId, $this->caveatId);
+        return Crypto\bound_hmac($secret, $this->verificationId, $this->caveatId);
     }
 
     /**
@@ -108,9 +101,9 @@ final class ThirdParty extends Caveat
      */
     public static function calculateVerificationId(string $secret, string $signature): string
     {
-        $rootKey = crypto_gen_derived_key($secret);
+        $rootKey = Crypto\gen_derived_key($secret);
 
-        return crypto_encrypt($rootKey, crypto_ensure_key_length($signature));
+        return Crypto\encrypt($rootKey, Crypto\ensure_key_length($signature));
     }
 
     /**
@@ -122,10 +115,10 @@ final class ThirdParty extends Caveat
      */
     public function retrieveRootKeyFromVerificationId(string $signature): string
     {
-        $nonce = substr($this->verificationId, 0, crypto_get_nonce_length());
-        $vId   = substr($this->verificationId, crypto_get_nonce_length());
+        $nonce = substr($this->verificationId, 0, Crypto\get_nonce_length());
+        $vId   = substr($this->verificationId, Crypto\get_nonce_length());
 
-        return crypto_decrypt($vId, $nonce, crypto_ensure_key_length($signature));
+        return Crypto\decrypt($vId, $nonce, Crypto\ensure_key_length($signature));
     }
 
     /**
@@ -148,7 +141,7 @@ final class ThirdParty extends Caveat
         return sprintf(
             "cid %s\nvid %s\n%s",
             $this->caveatId,
-            base64_url_encode($this->verificationId),
+            Crypto\base64_url_encode($this->verificationId),
             $this->hasLocation() ? sprintf("cl %s\n", $this->getLocation()) : ''
         );
     }

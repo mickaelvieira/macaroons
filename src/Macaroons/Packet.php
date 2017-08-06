@@ -79,7 +79,7 @@ final class Packet
         $parts = explode(' ', substr($encoded, $start, $end));
 
         if (count($parts) < 2) {
-            throw new \DomainException(sprintf('Invalid packet: it seems to be broken near "%s"', implode($parts)));
+            throw new \DomainException('A packet appears to broken near');
         }
 
         $key  = array_shift($parts);

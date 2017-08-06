@@ -26,4 +26,14 @@ class SizeSpec extends ObjectBehavior
     {
         $this->hex()->shouldBeEqualTo('0023');
     }
+
+    function it_converts_a_decimal_into_an_hexadecimal()
+    {
+        $this::toHex(35)->shouldReturn('0023');
+    }
+
+    function it_converts_an_hexadecimal_into_a_decimal()
+    {
+        $this::toDec('0023')->shouldReturn(35);
+    }
 }

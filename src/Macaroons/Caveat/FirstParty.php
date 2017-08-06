@@ -18,7 +18,7 @@ use Macaroons\Macaroon;
 use Macaroons\Verifier;
 use Macaroons\Exceptions;
 
-use function Macaroons\Crypto\crypto_hmac;
+use function Macaroons\Crypto\hmac;
 
 /**
  * Class FirstParty
@@ -65,7 +65,7 @@ final class FirstParty extends Caveat
      */
     public function sign(string $secret): string
     {
-        return crypto_hmac($secret, $this->predicate);
+        return hmac($secret, $this->predicate);
     }
 
     /**
@@ -73,10 +73,12 @@ final class FirstParty extends Caveat
      */
     public function verify(Verifier $verifier, Macaroon $root): Verifier
     {
+        // Does the predicate match any verifier check?
         if (!$verifier->verifyPredicate($this->getPredicate())) {
             throw new Exceptions\UnsatisfiedCaveat(sprintf('Caveat \'%s\' is not satisfied', $this->getCaveatId()));
         }
 
+        // Pass on the signature to the next caveat
         return $verifier->withSignature($this->sign($verifier->getSignature()));
     }
 

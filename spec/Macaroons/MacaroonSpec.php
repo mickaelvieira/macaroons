@@ -4,8 +4,8 @@ namespace spec\Macaroons;
 
 use PhpSpec\ObjectBehavior;
 
-use function Macaroons\Crypto\crypto_hmac;
-use function Macaroons\Crypto\crypto_gen_derived_key;
+use function Macaroons\Crypto\hmac;
+use function Macaroons\Crypto\gen_derived_key;
 
 use Macaroons\Verifier;
 use Macaroons\Macaroon;
@@ -23,7 +23,7 @@ class MacaroonSpec extends ObjectBehavior
     function it_generates_the_macaroon_signature()
     {
         $this->beConstructedThrough('create', ['https://google.com', 'identifier', 'secret key']);
-        $this->getSignature()->shouldReturn(crypto_hmac(crypto_gen_derived_key('secret key'), 'identifier'));
+        $this->getSignature()->shouldReturn(hmac(gen_derived_key('secret key'), 'identifier'));
     }
 
     function it_does_not_have_any_cavets_by_default()

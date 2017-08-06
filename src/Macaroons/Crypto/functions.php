@@ -19,15 +19,15 @@ include_once __DIR__ . '/../../compatibility.php';
 /**
  * @return string
  */
-function crypto_gen_nonce(): string
+function gen_nonce(): string
 {
-    return random_bytes(crypto_get_nonce_length());
+    return random_bytes(get_nonce_length());
 }
 
 /**
  * @return int
  */
-function crypto_get_nonce_length(): int
+function get_nonce_length(): int
 {
     return \SODIUM_CRYPTO_SECRETBOX_NONCEBYTES;
 }
@@ -37,9 +37,9 @@ function crypto_get_nonce_length(): int
  *
  * @return string
  */
-function crypto_gen_derived_key(string $key): string
+function gen_derived_key(string $key): string
 {
-    return crypto_hmac(str_pad('macaroons-key-generator', 32, "\0", STR_PAD_RIGHT), $key);
+    return hmac(str_pad('macaroons-key-generator', 32, "\0", STR_PAD_RIGHT), $key);
 }
 
 /**
@@ -48,13 +48,13 @@ function crypto_gen_derived_key(string $key): string
  *
  * @return string
  */
-function crypto_encrypt(string $plaintext, string $key): string
+function encrypt(string $plaintext, string $key): string
 {
-    $nonce = crypto_gen_nonce();
+    $nonce = gen_nonce();
     $box   = $nonce . \sodium_crypto_secretbox($plaintext, $nonce, $key);
 
-    crypto_erase($nonce);
-    crypto_erase($key);
+    erase($nonce);
+    erase($key);
 
     return $box;
 }
@@ -68,12 +68,12 @@ function crypto_encrypt(string $plaintext, string $key): string
  *
  * @throws \LogicException
  */
-function crypto_decrypt(string $cipherText, string $nonce, string $key)
+function decrypt(string $cipherText, string $nonce, string $key)
 {
     $plaintext = \sodium_crypto_secretbox_open($cipherText, $nonce, $key);
 
-    crypto_erase($nonce);
-    crypto_erase($key);
+    erase($nonce);
+    erase($key);
 
     if ($plaintext === false) {
         throw new \DomainException('Bad cipher text');
@@ -88,7 +88,7 @@ function crypto_decrypt(string $cipherText, string $nonce, string $key)
  *
  * @return string
  */
-function crypto_hmac(string $key, string $data): string
+function hmac(string $key, string $data): string
 {
     return hash_hmac('sha256', $data, $key, true);
 }
@@ -100,12 +100,12 @@ function crypto_hmac(string $key, string $data): string
  *
  * @return string
  */
-function crypto_bound_hmac(string $key, string $data1, string $data2): string
+function bound_hmac(string $key, string $data1, string $data2): string
 {
-    $hmac1 = crypto_hmac($key, $data1);
-    $hmac2 = crypto_hmac($key, $data2);
+    $hmac1 = hmac($key, $data1);
+    $hmac2 = hmac($key, $data2);
 
-    return crypto_hmac($key, $hmac1 . $hmac2);
+    return hmac($key, $hmac1 . $hmac2);
 }
 
 /**
@@ -113,7 +113,7 @@ function crypto_bound_hmac(string $key, string $data1, string $data2): string
  *
  * @return string
  */
-function crypto_ensure_key_length(string $key): string
+function ensure_key_length(string $key): string
 {
     $thirtyTwo = \SODIUM_CRYPTO_SECRETBOX_KEYBYTES;
 
@@ -131,7 +131,7 @@ function crypto_ensure_key_length(string $key): string
 /**
  * @param mixed $data
  */
-function crypto_erase($data)
+function erase($data)
 {
     \sodium_memzero($data);
 }
