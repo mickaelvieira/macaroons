@@ -11,6 +11,7 @@
 
 namespace spec\Macaroons\Serialization\V1;
 
+use Macaroons\Caveat;
 use Macaroons\Macaroon;
 use Macaroons\Serialization\V1\Serializer;
 use Macaroons\Verifier;
@@ -106,5 +107,61 @@ class SerializerSpec extends ObjectBehavior
         $macaroon->getIdentifier()->shouldReturn('12345');
         $macaroon->getLocation()->shouldReturn('https://target-service.co');
         $macaroon->shouldHaveCaveats();
+    }
+
+    function it_deserializes_a_token_without_caveats_from_a_rust_library()
+    {
+        $deserialize = $this->deserialize('MDAyMWxvY2F0aW9uIGh0dHA6Ly9leGFtcGxlLm9yZy8KMDAxNWlkZW50aWZpZXIga2V5aWQKMDAyZnNpZ25hdHVyZSB83ueSURxbxvUoSFgF3-myTnheKOKpkwH51xHGCeOO9wo');
+
+        $bytes = [124, 222, 231, 146, 81, 28, 91, 198, 245, 40, 72, 88, 5,
+            223, 233, 178, 78, 120, 94, 40, 226, 169, 147, 1, 249, 215,
+            17, 198, 9, 227, 142, 247];
+
+
+        $sig = vsprintf(str_repeat('%c', count($bytes)), $bytes);
+
+        $deserialize->getLocation()->shouldReturn('http://example.org/');
+        $deserialize->getIdentifier()->shouldReturn('keyid');
+        $deserialize->getSignature()->shouldReturn($sig);
+        $deserialize->shouldNotHaveCaveats();
+    }
+
+    function it_deserializes_a_token_with_a_first_party_caveats_from_a_different_library()
+    {
+        $deserialize = $this->deserialize('MDAyMWxvY2F0aW9uIGh0dHA6Ly9leGFtcGxlLm9yZy8KMDAxNWlkZW50aWZpZXIga2V5aWQKMDAxZGNpZCBhY2NvdW50ID0gMzczNTkyODU1OQowMDJmc2lnbmF0dXJlIPVIB_bcbt-Ivw9zBrOCJWKjYlM9v3M5umF2XaS9JZ2HCg');
+
+        $bytes = [245, 72, 7, 246, 220, 110, 223, 136, 191, 15, 115, 6, 179, 130, 37, 98, 163,
+            98, 83, 61, 191, 115, 57, 186, 97, 118, 93, 164, 189, 37, 157, 135];
+
+        $sig = vsprintf(str_repeat('%c', count($bytes)), $bytes);
+
+        $deserialize->getLocation()->shouldReturn('http://example.org/');
+        $deserialize->getIdentifier()->shouldReturn('keyid');
+        $deserialize->getSignature()->shouldReturn($sig);
+        $deserialize->shouldHaveCaveats();
+    }
+
+    function it_deserializes_a_token_with_2_first_party_caveats_from_a_different_library()
+    {
+        $deserialize = $this->deserialize('MDAyMWxvY2F0aW9uIGh0dHA6Ly9leGFtcGxlLm9yZy8KMDAxNWlkZW50aWZpZXIga2V5aWQKMDAxZGNpZCBhY2NvdW50ID0gMzczNTkyODU1OQowMDE1Y2lkIHVzZXIgPSBhbGljZQowMDJmc2lnbmF0dXJlIEvpZ80eoMaya69qSpTumwWxWIbaC6hejEKpPI0OEl78Cg');
+        $bytes = [75, 233, 103, 205, 30, 160, 198, 178, 107, 175, 106, 74, 148, 238, 155,
+            5, 177, 88, 134, 218, 11, 168, 94, 140, 66, 169, 60, 141, 14, 18, 94, 252];
+
+        $sig = vsprintf(str_repeat('%c', count($bytes)), $bytes);
+
+        $deserialize->getLocation()->shouldReturn('http://example.org/');
+        $deserialize->getIdentifier()->shouldReturn('keyid');
+        $deserialize->getSignature()->shouldReturn($sig);
+        $deserialize->shouldHaveCaveats();
+
+        foreach ($deserialize as $k => $caveat) {
+            if ($k === 0) {
+                $caveat->getPredicate()->shouldReturn('account = 3735928559');
+            } else {
+                $caveat->getPredicate()->shouldReturn('user = alice');
+            }
+
+            $caveat->shouldHaveType(Caveat::class);
+        }
     }
 }
