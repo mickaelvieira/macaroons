@@ -11,9 +11,9 @@
 
 declare(strict_types = 1);
 
-namespace Macaroons;
+namespace Macaroons\Serialization\V1;
 
-use Macaroons\Packet\Size;
+use Macaroons\Serialization\V1\Packet\Size;
 
 /**
  * Class Packet

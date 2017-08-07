@@ -15,7 +15,6 @@ namespace Macaroons\Serialization\V1;
 
 use Macaroons\Caveat;
 use Macaroons\Crypto;
-use Macaroons\Packet;
 use Macaroons\Macaroon;
 use Macaroons\Serialization\Serializer as SerializerContract;
 

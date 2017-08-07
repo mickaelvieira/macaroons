@@ -1,8 +1,8 @@
 <?php
 
-namespace spec\Macaroons;
+namespace spec\Macaroons\Serialization\V1;
 
-use Macaroons\Packet;
+use Macaroons\Serialization\V1\Packet;
 use PhpSpec\ObjectBehavior;
 
 class PacketSpec extends ObjectBehavior

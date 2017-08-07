@@ -1,8 +1,8 @@
 <?php
 
-namespace spec\Macaroons\Packet;
+namespace spec\Macaroons\Serialization\V1\Packet;
 
-use Macaroons\Packet\Size;
+use Macaroons\Serialization\V1\Packet\Size;
 use PhpSpec\ObjectBehavior;
 
 class SizeSpec extends ObjectBehavior

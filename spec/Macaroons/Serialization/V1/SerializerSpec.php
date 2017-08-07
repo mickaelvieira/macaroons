@@ -13,8 +13,8 @@ namespace spec\Macaroons\Serialization\V1;
 
 use Macaroons\Caveat;
 use Macaroons\Macaroon;
-use Macaroons\Serialization\V1\Serializer;
 use Macaroons\Verifier;
+use Macaroons\Serialization\V1\Serializer;
 use PhpSpec\ObjectBehavior;
 
 class SerializerSpec extends ObjectBehavior
