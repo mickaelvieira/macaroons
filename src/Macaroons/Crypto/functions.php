@@ -14,6 +14,8 @@ declare(strict_types = 1);
 namespace Macaroons\Crypto;
 
 // @codingStandardsIgnoreLine
+use Macaroons\Exceptions\InvalidSignature;
+
 include_once __DIR__ . '/../../compatibility.php';
 
 /**
@@ -66,7 +68,7 @@ function encrypt(string $plaintext, string $key): string
  *
  * @return mixed
  *
- * @throws \LogicException
+ * @throws InvalidSignature
  */
 function decrypt(string $cipherText, string $nonce, string $key)
 {
@@ -76,7 +78,7 @@ function decrypt(string $cipherText, string $nonce, string $key)
     erase($key);
 
     if ($plaintext === false) {
-        throw new \DomainException('Bad cipher text');
+        throw new InvalidSignature('Bad cipher text');
     }
 
     return $plaintext;

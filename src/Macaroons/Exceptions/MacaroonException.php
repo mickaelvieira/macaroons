@@ -14,10 +14,10 @@ declare(strict_types = 1);
 namespace Macaroons\Exceptions;
 
 /**
- * Class InvalidSignature
+ * Class MacaroonException
  *
  * @package Macaroons\Exceptions
  */
-final class InvalidSignature extends MacaroonException
+class MacaroonException extends \DomainException
 {
 }

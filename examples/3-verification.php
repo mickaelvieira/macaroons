@@ -5,6 +5,7 @@ include_once __DIR__ . '/../vendor/autoload.php';
 
 use Macaroons\Macaroon;
 use Macaroons\Verifier;
+use Macaroons\Exceptions\MacaroonException;
 
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
@@ -33,7 +34,7 @@ $verifier = (new Verifier())
 try {
     // verify the macaroon
     $verified = $macaroon->verify('secret random number', $verifier);
-} catch (\DomainException $e) {
+} catch (MacaroonException $e) {
     // catch eventual exception raised during the verification process
     echo json_encode([
         'error' => $e->getMessage()

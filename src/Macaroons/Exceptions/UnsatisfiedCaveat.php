@@ -18,6 +18,6 @@ namespace Macaroons\Exceptions;
  *
  * @package Macaroons\Exceptions
  */
-final class UnsatisfiedCaveat extends \DomainException
+final class UnsatisfiedCaveat extends MacaroonException
 {
 }

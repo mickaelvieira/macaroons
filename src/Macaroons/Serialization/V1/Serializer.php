@@ -17,6 +17,7 @@ use Macaroons\Caveat;
 use Macaroons\Crypto;
 use Macaroons\Packet;
 use Macaroons\Macaroon;
+use Macaroons\Exceptions\InvalidPacket;
 use Macaroons\Serialization\Serializer as SerializerContract;
 
 /**
@@ -98,7 +99,7 @@ final class Serializer implements SerializerContract
                     $stack['cl'] = $packet->getData();
                     break;
                 default:
-                    throw new \DomainException(sprintf('Unknown packet key \'%s\'', $packet->getKey()));
+                    throw new InvalidPacket(sprintf('Unknown packet key \'%s\'', $packet->getKey()));
             }
 
             $index += $packet->getDecSize();

@@ -14,6 +14,7 @@ declare(strict_types = 1);
 namespace Macaroons;
 
 use Macaroons\Packet\Size;
+use Macaroons\Exceptions\InvalidPacket;
 
 /**
  * Class Packet
@@ -79,7 +80,7 @@ final class Packet
         $parts = explode(' ', substr($encoded, $start, $end));
 
         if (count($parts) < 2) {
-            throw new \DomainException('A packet appears to broken near');
+            throw new InvalidPacket('A packet appears to broken near');
         }
 
         $key  = array_shift($parts);

@@ -111,7 +111,7 @@ final class ThirdParty extends Caveat
      *
      * @return string
      *
-     * @throw \LogicException
+     * @throw \DomainException
      */
     public function retrieveRootKeyFromVerificationId(string $signature): string
     {

@@ -85,6 +85,7 @@ Back on the target service server
 use Macaroons\Macaroon;
 use Macaroons\Verifier;
 use Macaroons\Serialization\V1\Serializer;
+use Macaroons\Exceptions\MacaroonException;
 
 // deserialize both macaroons
 $macaroon  = Macaroon::deserialize('@#!?$', new Serializer());
@@ -98,7 +99,7 @@ $verifier = (new Verifier())
 
 try {
     $verified = $macaroon->verify('secret random number', $verifier);
-} catch (\DomainException $e) {
+} catch (MacaroonException $e) {
     // Catch verification errors
     echo $e->getMessage() . "\n";
 }
