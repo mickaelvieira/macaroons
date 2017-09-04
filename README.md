@@ -24,7 +24,7 @@ A php implementation of Macaroons: Cookies with Contextual Caveats for Decentral
 
 **About libsodium**
 - The `libsodium` library will be distributed with PHP >= 7.2)
-- The `libsodium` library is not required in `composer.json` because the versions 1 (`ext-libsodium`) and 2 (`ext-sodium`) have different names. Nevertheless, this package should work with both once installed.
+- The `libsodium` library is not required in `composer.json` because the versions 1 (`ext-libsodium`) and 2 (`ext-sodium`) have different names. Nevertheless this package is designed to work with both.
 
 **Installation**
 
@@ -54,7 +54,7 @@ use Macaroons\Macaroon;
 
 use function Macaroons\Crypto\gen_nonce;
 
-$macaroon = Macaroon::create('secret random number', Crypto\gen_nonce(), 'https://unicorn.co');
+$macaroon = Macaroon::create('secret random number', gen_nonce(), 'https://unicorn.co');
 $macaroon = $macaroon
     ->withThirdPartyCaveat('third party secret', 'user_auth', 'https://auth.unicorn.co');
 
@@ -85,6 +85,7 @@ Back on the target service server
 use Macaroons\Macaroon;
 use Macaroons\Verifier;
 use Macaroons\Serialization\V1\Serializer;
+use Macaroons\Exceptions\MacaroonException;
 
 // deserialize both macaroons
 $macaroon  = Macaroon::deserialize('@#!?$', new Serializer());
@@ -98,7 +99,7 @@ $verifier = (new Verifier())
 
 try {
     $verified = $macaroon->verify('secret random number', $verifier);
-} catch (\DomainException $e) {
+} catch (MacaroonException $e) {
     // Catch verification errors
     echo $e->getMessage() . "\n";
 }
