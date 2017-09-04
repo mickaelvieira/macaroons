@@ -15,6 +15,7 @@ use Macaroons\Caveat;
 use Macaroons\Macaroon;
 use Macaroons\Verifier;
 use Macaroons\Serialization\V1\Serializer;
+use Macaroons\Serialization\Serializer as SerializerContract;
 use PhpSpec\ObjectBehavior;
 
 class SerializerSpec extends ObjectBehavior
@@ -22,6 +23,7 @@ class SerializerSpec extends ObjectBehavior
     function it_is_initializable()
     {
         $this->shouldHaveType(Serializer::class);
+        $this->shouldHaveType(SerializerContract::class);
     }
 
     function it_serializes_a_macaroon_with_no_caveats()
@@ -109,7 +111,7 @@ class SerializerSpec extends ObjectBehavior
         $macaroon->shouldHaveCaveats();
     }
 
-    function it_deserializes_a_token_without_caveats_from_a_rust_library()
+    function it_deserializes_a_token_without_caveats_from_a_different_library()
     {
         $deserialize = $this->deserialize('MDAyMWxvY2F0aW9uIGh0dHA6Ly9leGFtcGxlLm9yZy8KMDAxNWlkZW50aWZpZXIga2V5aWQKMDAyZnNpZ25hdHVyZSB83ueSURxbxvUoSFgF3-myTnheKOKpkwH51xHGCeOO9wo');
 
