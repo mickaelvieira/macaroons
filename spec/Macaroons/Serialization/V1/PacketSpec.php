@@ -39,10 +39,9 @@ class PacketSpec extends ObjectBehavior
         $this->getHexSize()->shouldReturn('0016');
     }
 
-    function xit_triggers_an_exception_when_trying_to_decode_malformed_packet()
+    function it_triggers_an_exception_when_trying_to_decode_malformed_packet()
     {
-        // $this->shouldThrow(new \DomainException())->during('fromEncoded', ["0016cid\nwhatever"]);
-        // not testable at the moment but it will be possible with phpspec 4
-        // https://github.com/phpspec/phpspec/commit/f86c400df5ea214432916e4e99552b9b01fbb5e6
+        $this->beConstructedThrough('fromEncoded', ["0016cid\nwhatever"]);
+        $this->shouldThrow(new \DomainException('A packet appears to be broken'))->duringInstantiation();
     }
 }

@@ -80,7 +80,7 @@ final class Packet
         $parts = explode(' ', substr($encoded, $start, $end));
 
         if (count($parts) < 2) {
-            throw new InvalidPacket('A packet appears to broken near');
+            throw new InvalidPacket('A packet appears to be broken');
         }
 
         $key  = array_shift($parts);
