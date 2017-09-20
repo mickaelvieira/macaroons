@@ -1,5 +1,9 @@
 sudo: required
 
+env:
+  global:
+    - MAKEFLAGS="-j 2"
+
 language: php
 
 php: [7.1]
@@ -16,8 +20,8 @@ install:
 
 script:
   - mkdir -p build/logs
-  - php bin/phpcs --standard=PSR2 ./src/ --report=full --ignore=compatibility.php,functions.php
-  - php bin/phpspec run --format=pretty -v
+  - make lint
+  - make test
 
 after_success:
   - travis_retry php bin/coveralls -v
@@ -25,4 +29,3 @@ after_success:
 cache:
     directories:
         - $HOME/.composer/cache
-

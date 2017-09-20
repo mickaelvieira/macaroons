@@ -3,7 +3,7 @@
 ```sh
 $ git clone git@github.com:mickaelvieira/macaroons.git
 $ cd macaroons
-$ composer install
+$ make
 ```
 
 ## Run the test
@@ -11,7 +11,7 @@ $ composer install
 The test suite has been written with [PHPSpec](http://phpspec.net/)
 
 ```sh
-$ ./bin/phpspec run --format=pretty
+$ make test
 ```
 
 ## PHP Code Sniffer
@@ -19,5 +19,11 @@ $ ./bin/phpspec run --format=pretty
 This project follows the coding style guide [PSR1](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md) and [PSR2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 
 ```sh
-$ ./bin/phpcs --standard=PSR2 ./src/ --ignore=compatibility.php,functions.php
+$ make lint
+```
+
+To fix PHP Code Sniffer issues
+
+```sh
+$ make fmt
 ```
